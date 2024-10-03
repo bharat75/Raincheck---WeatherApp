@@ -1,10 +1,12 @@
 import React from "react";
+import logo from "../assets/weather-app.png";
 
 const Header = () => {
   return (
     <div className="Header">
-      <nav>
-        <a>Location</a>
+      <nav className="header-nav">
+        <img src={logo} alt="Weather App" />
+        <a href="#">RainCheck</a>
       </nav>
     </div>
   );
