@@ -8,20 +8,32 @@ import cloudy from "../assets/cloudy.png";
 import mist from "../assets/mist.png";
 import rain from "../assets/rain.png";
 import sunny from "../assets/sunny.png";
+import Shimmer from "./shimmer";
 
 const Body = () => {
   const [weather, setWeather] = useState(null);
   const [date, setDate] = useState(new Date());
   const [city, setCity] = useState("");
   const [searchedCity, setSearchedCity] = useState("Ranchi");
+  const [useLocation, setUseLocation] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getWeather(searchedCity);
+    if (useLocation) {
+      setLoading(true);
+      getLocationWeather();
+    } else {
+      setLoading(true);
+      getWeather(searchedCity);
+    }
     getCurrentTime();
-  }, [searchedCity]);
+  }, [searchedCity, useLocation]);
+
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   async function getWeather(cityName) {
     try {
+      await delay(2000);
       const data = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&APPID=5dce8b852c20f0860429972dc00b16f6`
       );
@@ -31,6 +43,33 @@ const Body = () => {
     } catch (error) {
       console.error("Error fetching weather data:", error);
       setWeather(null);
+    } finally {
+      setLoading(false); // Ensure loading is set to false after fetch
+    }
+  }
+
+  async function getLocationWeather() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          await delay(2000);
+          const data = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&APPID=5dce8b852c20f0860429972dc00b16f6`
+          );
+          const json = await data.json();
+          setWeather(json);
+          console.log(json);
+        } catch (error) {
+          console.error("Error fetching weather data:", error);
+          setWeather(null);
+        } finally {
+          setLoading(false); // Ensure loading is set to false after fetch
+        }
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+      setLoading(false); // Set loading to false if geolocation fails
     }
   }
 
@@ -43,6 +82,7 @@ const Body = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
+    setUseLocation(false);
     setSearchedCity(city);
   };
 
@@ -88,6 +128,7 @@ const Body = () => {
             />
             <button type="submit">Search</button>
           </form>
+          <button onClick={() => setUseLocation(true)}>Use My Location</button>
         </div>
 
         <div className="date-time">
@@ -95,14 +136,17 @@ const Body = () => {
         </div>
 
         <div className="Weather-card">
-          {weather && weather.cod === 200 ? (
+          {loading ? (
+            <Shimmer /> // Show shimmer while loading
+          ) : weather && weather.cod === 200 ? (
             <>
               <div className="city">
                 <h1>{weather.name + ", " + weather.sys.country}</h1>
               </div>
               <div className="weather-att">
                 <div className="weather-item">
-                  <img src={temp}></img>
+                  <img src={temp} alt="Temperature" />
+                  <p>Temperature</p>
                   <p>{weather.main.temp}° C</p>
                 </div>
                 <div className="weather-item">
@@ -110,18 +154,22 @@ const Body = () => {
                     src={getWeatherIcon(weather.weather[0].main)}
                     alt="Weather condition"
                   />
+                  <p>Weather type</p>
                   <p>{weather.weather[0].main}</p>
                 </div>
                 <div className="weather-item">
-                  <img src={humidity}></img>
+                  <img src={humidity} alt="Humidity" />
+                  <p>Humidity</p>
                   <p>{weather.main.humidity} %</p>
                 </div>
                 <div className="weather-item">
-                  <img src={winds}></img>
+                  <img src={winds} alt="Wind" />
+                  <p>Wind</p>
                   <p>{weather.wind.speed} Km/h</p>
                 </div>
                 <div className="weather-item">
-                  <img src={viz}></img>
+                  <img src={viz} alt="Visibility" />
+                  <p>Visibility</p>
                   <p>{weather.visibility} Km</p>
                 </div>
               </div>
