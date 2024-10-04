@@ -122,7 +122,7 @@ const Body = () => {
           <form onSubmit={handleSearch}>
             <input
               type="text"
-              placeholder="Enter city name"
+              placeholder="Enter cities name"
               value={city}
               onChange={(e) => setCity(e.target.value)}
             />
