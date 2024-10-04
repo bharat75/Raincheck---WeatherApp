@@ -2,9 +2,9 @@
   "name": "weather",
   "version": "1.0.0",
   "description": "This is a weather app",
-  "main": "index.js",
   "scripts": {
     "start": "parcel index.html",
+    "build": "parcel build index.html --public-url ./",
     "test": "test",
     "deploy": "gh-pages -d build"
   },
