@@ -193,6 +193,7 @@ body {
 
 .shimmer-container {
   width: 100%;
+  max-width: 1455px;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
   border-radius: 15px;
@@ -209,10 +210,11 @@ body {
 }
 
 .shimmer-city {
-  width: 80%;
+  width: 100%; /* Make sure it's taking up full width */
+  max-width: 600px; /* Add a max-width to prevent it from being too wide */
   height: 20px;
   background: linear-gradient(90deg, #e0e0e0 0%, #f0f0f0 50%, #e0e0e0 100%);
-  margin: 10px auto;
+  margin: 10px auto; /* Centering horizontally */
   border-radius: 5px;
   animation: shimmer 1.5s infinite;
 }

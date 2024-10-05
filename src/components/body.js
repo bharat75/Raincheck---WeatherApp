@@ -44,7 +44,7 @@ const Body = () => {
       console.error("Error fetching weather data:", error);
       setWeather(null);
     } finally {
-      setLoading(false); // Ensure loading is set to false after fetch
+      setLoading(false);
     }
   }
 
@@ -64,12 +64,12 @@ const Body = () => {
           console.error("Error fetching weather data:", error);
           setWeather(null);
         } finally {
-          setLoading(false); // Ensure loading is set to false after fetch
+          setLoading(false);
         }
       });
     } else {
       alert("Geolocation is not supported by this browser.");
-      setLoading(false); // Set loading to false if geolocation fails
+      setLoading(false);
     }
   }
 
@@ -139,7 +139,7 @@ const Body = () => {
 
         <div className="Weather-card">
           {loading ? (
-            <Shimmer /> // Show shimmer while loading
+            <Shimmer />
           ) : weather && weather.cod === 200 ? (
             <>
               <div className="city">
