@@ -128,7 +128,9 @@ const Body = () => {
             />
             <button type="submit">Search</button>
           </form>
-          <button onClick={() => setUseLocation(true)}>Use My Location</button>
+          <button className="location-btn" onClick={() => setUseLocation(true)}>
+            Use My Location
+          </button>
         </div>
 
         <div className="date-time">
